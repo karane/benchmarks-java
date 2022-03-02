@@ -78,11 +78,11 @@ public class TemplatePerformanceComparison {
     }
 
     @Benchmark
-    public void templateMatcherTemplateMapper(Blackhole bh) {
+    public void templateMatcherTemplateApplier(Blackhole bh) {
 
-        TemplateApplier templateMapper = new TemplateApplier(templateStandard);
+        TemplateApplier templateApplier = new TemplateApplier(templateStandard);
         for (HashMap variablesMap : variablesMaps) {
-            bh.consume(replaceFieldsTemplateMapper(templateMapper, variablesMap));
+            bh.consume(replaceFieldsTemplateApplier(templateApplier, variablesMap));
         }
     }
 
@@ -131,7 +131,7 @@ public class TemplatePerformanceComparison {
         return true;
     }
 
-    public static boolean replaceFieldsTemplateMapper(TemplateApplier templateApplier, HashMap<String, String> valuesMap) {
+    public static boolean replaceFieldsTemplateApplier(TemplateApplier templateApplier, HashMap<String, String> valuesMap) {
 
         templateApplier.apply(valuesMap);
         return true;

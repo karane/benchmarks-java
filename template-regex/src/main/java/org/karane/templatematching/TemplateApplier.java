@@ -14,29 +14,23 @@ public class TemplateApplier {
     private static final int VARIABLE_GROUP_INDEX = 2;
 
     private ArrayList<TemplatePiece> templatePieces;
-    private HashMap<String, String> contextMap;
     private String template;
 
-    public TemplateApplier(String template, HashMap<String, String> contextMap) {
+    public TemplateApplier(String template) {
         this.template = template;
-        this.contextMap = contextMap;
         buildTemplatePieces(this.template);
     }
 
-    public TemplateApplier(String template) {
-        this(template, null);
-    }
-
     static public void main(String [] args) {
-        TemplateApplier templateMapper = new TemplateApplier("{\"var1\": \"$var1\", \"var2\": \"$var2\"}");
+        TemplateApplier templateApplier = new TemplateApplier("{\"var1\": \"$var1\", \"var2\": \"$var2\"}");
         HashMap<String, String> contextMap = new HashMap<>();
         contextMap.put("var1", "(1)");
         contextMap.put("var2", "(2)");
-        String output = templateMapper.apply(contextMap);
+        String output = templateApplier.apply(contextMap);
         System.out.println("Output: " + output);
 
         contextMap.put("var2", "(3)");
-        output = templateMapper.apply(contextMap);
+        output = templateApplier.apply(contextMap);
 
         System.out.println("Output: " + output);
     }
@@ -65,18 +59,16 @@ public class TemplateApplier {
     }
 
     public String apply(HashMap<String, String> contextMap) {
-        this.contextMap = contextMap;
         StringBuilder sb = new StringBuilder();
         for(TemplatePiece piece: templatePieces) {
-            sb.append(piece.getValue());
+            sb.append(piece.getValue(contextMap));
         }
-        this.contextMap = null; //erase map reference
         return sb.toString();
     }
 
 
     interface TemplatePiece {
-        String getValue();
+        String getValue(HashMap<String, String> contextMap);
     }
 
     class TemplateString implements TemplatePiece {
@@ -86,7 +78,7 @@ public class TemplateApplier {
             this.content = content;
         }
 
-        public String getValue() {
+        public String getValue(HashMap<String, String> contextMap) {
             return content;
         }
 
@@ -122,7 +114,7 @@ public class TemplateApplier {
             this.variableName = variableName;
         }
 
-        public String getValue(){
+        public String getValue(HashMap<String, String> contextMap){
             return contextMap.getOrDefault(variableName, StringUtils.EMPTY);
         }
 
