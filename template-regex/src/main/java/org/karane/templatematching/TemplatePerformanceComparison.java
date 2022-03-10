@@ -86,6 +86,28 @@ public class TemplatePerformanceComparison {
         }
     }
 
+    @Benchmark
+    public void templateMatcherTemplateApplier128(Blackhole bh) {
+
+        TemplateApplier templateApplier = new TemplateApplier(templateStandard);
+        templateApplier.setInitialCapacity(128);
+
+        for (HashMap variablesMap : variablesMaps) {
+            bh.consume(replaceFieldsTemplateApplier(templateApplier, variablesMap));
+        }
+    }
+
+    @Benchmark
+    public void templateMatcherTemplateApplier256(Blackhole bh) {
+
+        TemplateApplier templateApplier = new TemplateApplier(templateStandard);
+        templateApplier.setInitialCapacity(256);
+
+        for (HashMap variablesMap : variablesMaps) {
+            bh.consume(replaceFieldsTemplateApplier(templateApplier, variablesMap));
+        }
+    }
+
     private static boolean replaceFields(String template, HashMap<String, String> valuesMap) {
         Pattern pattern = Pattern.compile("\"\\$([^\"]+)\"");
         Matcher match = pattern.matcher(template);

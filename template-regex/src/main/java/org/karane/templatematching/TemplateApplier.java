@@ -15,6 +15,7 @@ public class TemplateApplier {
 
     private ArrayList<TemplatePiece> templatePieces;
     private String template;
+    private int initialCapacity = 16;
 
     public TemplateApplier(String template) {
         this.template = template;
@@ -59,13 +60,16 @@ public class TemplateApplier {
     }
 
     public String apply(HashMap<String, String> contextMap) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(initialCapacity);
         for(TemplatePiece piece: templatePieces) {
             sb.append(piece.getValue(contextMap));
         }
         return sb.toString();
     }
 
+    public void setInitialCapacity(int initialCapacity) {
+        this.initialCapacity = initialCapacity;
+    }
 
     interface TemplatePiece {
         String getValue(HashMap<String, String> contextMap);
